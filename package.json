@@ -1,0 +1,20 @@
+{
+  "name": "ts_project",
+  "version": "1.0.0",
+  "description": "drag-n-drops ts project",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "lite-server"
+  },
+  "keywords": [
+    "typescript",
+    "course"
+  ],
+  "author": "Yakymova Alla",
+  "license": "ISC",
+  "devDependencies": {
+    "lite-server": "^2.6.1",
+    "typescript": "^4.3.5"
+  }
+}

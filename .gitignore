@@ -1,0 +1,19 @@
+
+# dependencies
+/node_modules
+package-lock.json
+
+#cache
+.eslintcache
+
+# production
+.env
+
+.idea/
+*.iml
+*.xml
+
+# testing
+/coverage
+
+npm-debug.log*
