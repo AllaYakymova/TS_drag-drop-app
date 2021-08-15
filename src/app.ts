@@ -1,3 +1,42 @@
+// Project State Menegment
+
+class ProjectState {
+  private listeners: any[] = [];
+  private projects: any[] = [];
+  private static instance: ProjectState;
+
+  private constructor() {
+  }
+
+  static  getInstance() { // create unique instance of class guarantied
+    if(this.instance) {
+      return this.instance;
+    }
+    this.instance = new ProjectState();
+    return this.instance;
+  }
+
+  addListener(listenerFn: Function) {
+    this.listeners.push(listenerFn)
+  }
+
+  addProject(title: string, description: string, numOfPeople: number) {
+    const newProject = {
+      id: Math.random().toString(),
+      title,
+      description,
+      numOfPeople: numOfPeople
+    };
+    this.projects.push(newProject);
+    for(const listenersFn of this.listeners) {
+      listenersFn(this.projects.slice()); //????
+    }
+  }
+}
+
+const projectState = ProjectState.getInstance();
+
+
 // auto bind decorator
 function autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
   const originalMethod = descriptor.value;
@@ -44,16 +83,32 @@ class ProjectList {
   templateElement: HTMLTemplateElement;
   hastElement: HTMLDivElement;
   element: HTMLElement;
+  assignedProject: any[];
 
   constructor(private type: 'active' | 'finished') {
     this.templateElement = <HTMLTemplateElement>document.getElementById('project-list')!;
     this.hastElement = document.getElementById('app')! as HTMLDivElement; // the same option of type assignment
-
+    this.assignedProject = [];
     const importedNode = document.importNode(this.templateElement.content, true);
     this.element = importedNode.firstElementChild as HTMLElement;
     this.element.id = `${this.type}-projects`;
+
+    projectState.addListener((projects: any[]) => {
+      this.assignedProject = projects;
+      this.renderProject()
+    });
+
     this.attach();
     this.renderContent();
+  }
+
+  private renderProject() {
+    const listEl = document.getElementById(`${this.type}-projects-list`)! as HTMLUListElement;
+    for(const projectItem of this.assignedProject) {
+      const listItem = document.createElement('li');
+      listItem.textContent = projectItem.title;
+      listEl.appendChild(listItem);
+    }
   }
 
   private renderContent() {
@@ -137,7 +192,7 @@ class ProjectInput {
     const userInput = this.gatherUserInput();
     if(Array.isArray(userInput)) { // check if return array (tuple type)
       const  [title, desc, people] = userInput;
-      console.log(title, desc, people);
+      projectState.addProject(title, desc, people);
       this.clearInput();
     }
   }
