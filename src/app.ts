@@ -39,6 +39,34 @@ function validate(validatableInput: Validatable) {
   return isValid
 }
 
+// ProjectList Class
+class ProjectList {
+  templateElement: HTMLTemplateElement;
+  hastElement: HTMLDivElement;
+  element: HTMLElement;
+
+  constructor(private type: 'active' | 'finished') {
+    this.templateElement = <HTMLTemplateElement>document.getElementById('project-list')!;
+    this.hastElement = document.getElementById('app')! as HTMLDivElement; // the same option of type assignment
+
+    const importedNode = document.importNode(this.templateElement.content, true);
+    this.element = importedNode.firstElementChild as HTMLElement;
+    this.element.id = `${this.type}-projects`;
+    this.attach();
+    this.renderContent();
+  }
+
+  private renderContent() {
+    this.element.querySelector('ul')!.id =  `${this.type}-projects-list`;
+    this.element.querySelector('h2')!.textContent = this.type.toUpperCase() + ' PROJECTS';
+  }
+
+  private  attach() {
+    this.hastElement.insertAdjacentElement('beforeend', this.element)
+  }
+}
+
+
 // ProjectInput class
 class ProjectInput {
   templateElement: HTMLTemplateElement;
@@ -49,7 +77,7 @@ class ProjectInput {
   peopleInputElement: HTMLInputElement;
 
   constructor() {
-    this.templateElement = <HTMLTemplateElement>document.getElementById('project-input')!; // // the same option of type assignment
+    this.templateElement = <HTMLTemplateElement>document.getElementById('project-input')!; // the same option of type assignment
     this.hastElement = document.getElementById('app')! as HTMLDivElement; // the same option of type assignment
     const importedNode = document.importNode(this.templateElement.content, true);
     this.element = importedNode.firstElementChild as HTMLFormElement;
@@ -125,3 +153,5 @@ class ProjectInput {
 }
 
 const projectElement = new ProjectInput();
+const activeProjectList = new ProjectList('active');
+const finishedProjectList = new ProjectList('finished');
