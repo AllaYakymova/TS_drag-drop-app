@@ -4,20 +4,30 @@ enum ProjectStatus {
   Finished
 }
 
+
+
 class Project {
   constructor(public id: string, public title: string, public description: string, public people: number, public status: ProjectStatus) {
   }
 }
 
 // Project State Management
-type Listener = (items: Project[]) => void;
+type Listener<T> = (items: T[]) => void;
 
-class ProjectState {
-  private listeners: Listener[] = [];
-  private projects: any[] = [];
+//State class
+class State<T> {
+  protected listeners: Listener<T>[] = [];
+
+  addListener(listenerFn: Listener<T>) {
+    this.listeners.push(listenerFn)
+  }
+}
+
+class ProjectState extends State<Project>{
+  private projects: Project[] = [];
   private static instance: ProjectState;
-
-  private constructor() {
+  constructor() {
+    super();
   }
 
   static getInstance() { // create unique instance of class guarantied
@@ -28,9 +38,6 @@ class ProjectState {
     return this.instance;
   }
 
-  addListener(listenerFn: Listener) {
-    this.listeners.push(listenerFn)
-  }
 
   addProject(title: string, description: string, numOfPeople: number) {
     const newProject = new Project(
@@ -42,7 +49,7 @@ class ProjectState {
 
     this.projects.push(newProject);
     for (const listenersFn of this.listeners) {
-      listenersFn(this.projects.slice()); //????
+      listenersFn(this.projects.slice()); //
     }
   }
 }
