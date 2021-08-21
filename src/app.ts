@@ -168,13 +168,14 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement>
 
   constructor(hostId: string, project: Project) {
     super('single-project', hostId, false, project.id);
+    this.project = project;
     this.configure();
     this.renderContent()
   }
 
   configure() {
     this.element.addEventListener('dragstart', this.dragStartHandler);
-    this.element.addEventListener('dragstart', this.dragEndHandler);
+    this.element.addEventListener('dragend', this.dragEndHandler);
 
   }
 
@@ -191,7 +192,7 @@ class ProjectItem extends Component<HTMLUListElement, HTMLLIElement>
   }
 
   dragEndHandler(event: DragEvent): void {
-    console.log(event)
+    console.log('DragEnd', event)
   }
 }
 
