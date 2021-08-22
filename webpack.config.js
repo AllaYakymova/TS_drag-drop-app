@@ -6,7 +6,7 @@ module.exports = {
   output: {
     filename: 'bundle.js',
     path: path.resolve(__dirname, 'dist'),
-    publicPath: 'dist' // ? webpack-dev-server doesn't work
+    publicPath: 'dist'
   },
   devtool: 'inline-source-map',
   //what to do with ts files
